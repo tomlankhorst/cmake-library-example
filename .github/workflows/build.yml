@@ -1,0 +1,38 @@
+name: Build
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  source-build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: build
+      shell: bash
+      run: |
+        mkdir build && cd build
+        cmake .. 
+        make -j
+        ./cmake-library-example
+ 
+  pre-built-library:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: build
+      shell: bash
+      run: |
+        ./build-foo.sh
+        cd build
+        cmake .. -DWITH_PREBUILT_FOO=1
+        make -j
+        ./cmake-library-example
+
